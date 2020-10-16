@@ -1,0 +1,151 @@
+﻿<Window x:Class="GTSP_2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GTSP_2"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="500" Width="600" Background="Black">
+    <Window.Resources>
+
+        <!-- 
+        Converts a color value to a brush.
+        -->
+        <local:ColorToBrushConverter 
+            x:Key="colorToBrushConverter"
+            />
+
+        <!--
+        A data-template that defines the visuals for a rectangle.
+        -->
+        <DataTemplate 
+            DataType="{x:Type local:EllipseViewModel}"
+            >
+            <Grid>
+                <Thumb
+                    Width="{Binding Width}"
+                    Height="{Binding Height}"
+                    DragDelta="Thumb_DragDelta"
+                    >
+                    <Thumb.Template>
+                        <ControlTemplate>
+                            <Ellipse
+                                Fill="{Binding Color, Converter={StaticResource colorToBrushConverter}}"
+                                Cursor="Hand"/>
+                        </ControlTemplate>
+                    </Thumb.Template>
+
+                </Thumb>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="15" />
+                        <RowDefinition Height="10" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="15" />
+                        <ColumnDefinition Width="10" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--
+                    Place a 'connector' within the area of the colored rectangle.
+                    
+                    Note the bindings for 'Hotspot' and 'Ancestor'.
+                    
+                    'Hotspot' pushes the hotspot, or center, of the connector into the data-model.
+                    'Ancestors' specifies the ancestor control, in this case a Canvas, that is
+                    used to compute the value of 'Hotspot' relative to the ancestors coordinate system.
+                    -->
+                    <local:ConnectorItem
+                        Ancestor="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Canvas}}}"
+                        Hotspot="{Binding ConnectorHotspot, Mode=OneWayToSource}"
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        >
+                        <Ellipse
+                            Stroke="Blue"
+                            StrokeThickness="1"
+                            Fill="White"
+                            MouseLeftButtonDown="Ellipse_OnMouseLeftClick"
+                            />
+                    </local:ConnectorItem>
+
+                </Grid>
+            </Grid>
+        </DataTemplate>
+
+        <!--
+        The data-template for a connection.
+        
+        This defines the visuals for the connection, in this case a Line.
+        The start and end of the line are linked, via the data-model, to the connector hotspots.
+        -->
+        <DataTemplate
+            DataType="{x:Type local:ConnectionViewModel}"
+            >
+            <Line
+                Stroke="Cyan"
+                StrokeThickness="1"
+                X1="{Binding Rect1.ConnectorHotspot.X}"
+                Y1="{Binding Rect1.ConnectorHotspot.Y}"
+                X2="{Binding Rect2.ConnectorHotspot.X}"
+                Y2="{Binding Rect2.ConnectorHotspot.Y}"
+                />
+        </DataTemplate>
+    </Window.Resources>
+
+    <Window.DataContext>
+
+        <!-- Initialise the view model that supplies the UI with data. -->
+        <local:MainWindowViewModel />
+
+    </Window.DataContext>
+
+    <Grid>
+        <!--
+    	This ItemsControl presents the colored rectangles.
+        
+        The data-template that defines the visuals for each rectangle is in the 
+        resources section at the start of this file.
+        -->
+        <ItemsControl
+            ItemsSource="{Binding Ellipses}"
+            >
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemContainerStyle>
+                <Style>
+                    <Setter
+                        Property="Canvas.Left"
+                        Value="{Binding X}"
+                        />
+                    <Setter
+                        Property="Canvas.Top"
+                        Value="{Binding Y}"
+                        />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+        </ItemsControl>
+
+        <!--
+        This ItemsControl presents the connections, it overlays the colored rectangles.
+        
+        The data-template that defines the visuals for each connection is in the 
+        resources section at the start of this file.
+        -->
+        <ItemsControl
+            ItemsSource="{Binding Connections}"
+            >
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+    </Grid>
+</Window>
