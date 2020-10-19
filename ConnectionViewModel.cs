@@ -30,14 +30,10 @@ namespace GTSP_2
         /// </summary>
         public EllipseViewModel Rect1
         {
-            get
-            {
-                return rect1;
-            }
+            get => rect1;
             set
             {
                 rect1 = value;
-
                 OnPropertyChanged("Rect1");
             }
         }
@@ -47,14 +43,10 @@ namespace GTSP_2
         /// </summary>
         public EllipseViewModel Rect2
         {
-            get
-            {
-                return rect2;
-            }
+            get => rect2;
             set
             {
                 rect2 = value;
-
                 OnPropertyChanged("Rect2");
             }
         }

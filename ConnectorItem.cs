@@ -28,14 +28,10 @@ namespace GTSP_2
 
         public ConnectorItem()
         {
-            //
             // By default, we don't want a connector to be focusable.
-            //
             Focusable = false;
 
-            //
             // Hook layout update to recompute 'Hotspot' when the layout changes.
-            //
             this.LayoutUpdated += new EventHandler(ConnectorItem_LayoutUpdated);
             this.SizeChanged += new SizeChangedEventHandler(ConnectorItem_SizeChanged);
         }
@@ -46,14 +42,8 @@ namespace GTSP_2
         /// </summary>
         public Point Hotspot
         {
-            get
-            {
-                return (Point)GetValue(HotspotProperty);
-            }
-            set
-            {
-                SetValue(HotspotProperty, value);
-            }
+            get => (Point)GetValue(HotspotProperty);
+            set { SetValue(HotspotProperty, value); }
         }
 
         /// <summary>
@@ -61,14 +51,8 @@ namespace GTSP_2
         /// </summary>
         public FrameworkElement Ancestor
         {
-            get
-            {
-                return (FrameworkElement)GetValue(AncestorProperty);
-            }
-            set
-            {
-                SetValue(AncestorProperty, value);
-            }
+            get => (FrameworkElement)GetValue(AncestorProperty);
+            set { SetValue(AncestorProperty, value); }
         }
 
         #region Private Methods
@@ -105,27 +89,19 @@ namespace GTSP_2
         {
             if (this.Ancestor == null)
             {
-                // 
                 // Can't do anything if the ancestor hasn't been set.
-                //
                 return;
             }
 
-            //
             // Calculate the center point (in local coordinates) of the connector.
-            //
             var center = new Point(this.ActualWidth / 2, this.ActualHeight / 2);
 
-            //
             // Transform the local center point so that it is the center of the connector relative
             // to the specified ancestor.
-            //
             var centerRelativeToAncestor = this.TransformToAncestor(this.Ancestor).Transform(center);
 
-            //
             // Assign the computed point to the 'Hotspot' property.  Data-binding will take care of 
             // pushing this value into the data-model.
-            //
             this.Hotspot = centerRelativeToAncestor;
         }
 
