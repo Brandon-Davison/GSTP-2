@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Controls;
 
 namespace GTSP_2
@@ -10,6 +11,9 @@ namespace GTSP_2
     {
         public Dictionary<Vertex, LinkedList<KeyValuePair<Vertex, Edge>>> Adj { get; }
         private Canvas canvas;
+
+        public static int VertexCount { get; }
+        public static int EdgeCount { get; }
 
         /// <summary>
         /// Creates new graph
@@ -52,5 +56,64 @@ namespace GTSP_2
             if (Adj[v].Count == 0) return null;
             return Adj[v].First.Value.Value;
         }
+
+        /// <summary>
+        /// Disclaimer: I've coded Dijstra's before just for interview prep, but
+        /// this implementation was found online.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="source"></param>
+        /// <param name="verticesCount"></param>
+        public static void Dijkstra(int[,] graph, int source, int verticesCount)
+        {
+            int[] distance = new int[verticesCount];
+            bool[] shortestPathTreeSet = new bool[verticesCount];
+
+            for (int i = 0; i < verticesCount; ++i)
+            {
+                distance[i] = int.MaxValue;
+                shortestPathTreeSet[i] = false;
+            }
+
+            distance[source] = 0;
+
+            for (int count = 0; count < verticesCount - 1; ++count)
+            {
+                int u = MinimumDistance(distance, shortestPathTreeSet, verticesCount);
+                shortestPathTreeSet[u] = true;
+
+                for (int v = 0; v < verticesCount; ++v)
+                {
+                    if (!shortestPathTreeSet[v] && Convert.ToBoolean(graph[u, v]) && distance[u] != int.MaxValue && distance[u] + graph[u, v] < distance[v])
+                    {
+                        distance[v] = distance[u] + graph[u, v];
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Finds the min distance for Dijkstra's
+        /// </summary>
+        /// <param name="distance"></param>
+        /// <param name="shortestPathTreeSet"></param>
+        /// <param name="verticesCount"></param>
+        /// <returns></returns>
+        private static int MinimumDistance(int[] distance, bool[] shortestPathTreeSet, int verticesCount)
+        {
+            int min = int.MaxValue;
+            int minIndex = 0;
+
+            for (int v = 0; v < verticesCount; ++v)
+            {
+                if (shortestPathTreeSet[v] == false && distance[v] <= min)
+                {
+                    min = distance[v];
+                    minIndex = v;
+                }
+            }
+            return minIndex;
+        }
+
     }
 }

@@ -45,6 +45,8 @@ namespace GTSP_2
         /// </summary>
         private Point connectorHotspot;
 
+        public int EdgeCount { get; set; }
+
         #endregion Data Members
 
         public EllipseViewModel()
@@ -65,20 +67,14 @@ namespace GTSP_2
         /// </summary>
         public double X
         {
-            get
-            {
-                return x;
-            }
+            get => x;
             set
             {
-                if (x == value)
+                if (x != value)
                 {
-                    return;
+                    x = value;
+                    OnPropertyChanged("X");
                 }
-
-                x = value;
-
-                OnPropertyChanged("X");
             }
         }
 
@@ -87,20 +83,14 @@ namespace GTSP_2
         /// </summary>
         public double Y
         {
-            get
-            {
-                return y;
-            }
+            get => y;
             set
             {
-                if (y == value)
+                if (y != value)
                 {
-                    return;
+                    y = value;
+                    OnPropertyChanged("Y");
                 }
-
-                y = value;
-
-                OnPropertyChanged("Y");
             }
         }
 
@@ -109,20 +99,14 @@ namespace GTSP_2
         /// </summary>
         public double Width
         {
-            get
-            {
-                return width;
-            }
+            get => width;
             set
             {
-                if (width == value)
+                if (width != value)
                 {
-                    return;
+                    width = value;
+                    OnPropertyChanged("Width");
                 }
-
-                width = value;
-
-                OnPropertyChanged("Width");
             }
         }
 
@@ -131,20 +115,14 @@ namespace GTSP_2
         /// </summary>
         public double Height
         {
-            get
-            {
-                return height;
-            }
+            get => height;
             set
             {
-                if (height == value)
+                if (height != value)
                 {
-                    return;
+                    height = value;
+                    OnPropertyChanged("Height");
                 }
-
-                height = value;
-
-                OnPropertyChanged("Height");
             }
         }
 
@@ -153,20 +131,14 @@ namespace GTSP_2
         /// </summary>
         public Color Color
         {
-            get
-            {
-                return color;
-            }
+            get => color;
             set
             {
-                if (color == value)
+                if (color != value)
                 {
-                    return;
+                    color = value;
+                    OnPropertyChanged("Color");
                 }
-
-                color = value;
-
-                OnPropertyChanged("Color");
             }
         }
 
@@ -177,20 +149,16 @@ namespace GTSP_2
         /// </summary>
         public Point ConnectorHotspot
         {
-            get
-            {
-                return connectorHotspot;
-            }
+            get => connectorHotspot;
             set
             {
-                if (connectorHotspot == value)
+                if (connectorHotspot != value)
                 {
-                    return;
+                    // TODO: update edgeCount once more than one connection is allowed.
+                    EdgeCount = 1;
+                    connectorHotspot = value;
+                    OnPropertyChanged("ConnectorHotspot");
                 }
-
-                connectorHotspot = value;
-
-                OnPropertyChanged("ConnectorHotspot");
             }
         }
 
